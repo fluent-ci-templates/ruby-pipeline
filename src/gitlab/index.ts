@@ -1,4 +1,4 @@
 import pipeline from "./pipeline.ts";
-import { rubocop, rails, rspec, deploy } from "./jobs.ts";
+import { rubocop, rails, rspec, herokuDeploy } from "./jobs.ts";
 
-export { pipeline, rubocop, rails, rspec, deploy };
+export { pipeline, rubocop, rails, rspec, herokuDeploy };

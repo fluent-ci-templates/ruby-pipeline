@@ -12,7 +12,7 @@ export const rails = new Job().variables({
 
 export const rspec = new Job().script("rspec spec");
 
-export const deploy = new Job().stage("deploy").environment("production")
+export const herokuDeploy = new Job().stage("deploy").environment("production")
   .script(`
       gem install dpl
       dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_PRODUCTION_KEY
