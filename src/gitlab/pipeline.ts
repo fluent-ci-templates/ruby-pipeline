@@ -18,6 +18,6 @@ const gitlabci = new GitlabCI()
   .addJob("rubocop", rubocop)
   .addJob("rails", rails)
   .addJob("rspec", rspec)
-  .addJob("hreoku_deploy", herokuDeploy);
+  .addJob("heroku_deploy", herokuDeploy);
 
 export default gitlabci;

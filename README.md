@@ -88,7 +88,7 @@ rspec:
   script:
     - rspec spec
 
-hreoku_deploy:
+heroku_deploy:
   stage: deploy
   environment: production
   script:

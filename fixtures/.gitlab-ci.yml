@@ -35,10 +35,9 @@ rspec:
   script:
     - rspec spec
 
-hreoku_deploy:
+heroku_deploy:
   stage: deploy
   environment: production
   script:
     - gem install dpl
     - dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_PRODUCTION_KEY
-
