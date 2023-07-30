@@ -1,17 +1,33 @@
 import Client from "@dagger.io/dagger";
+import { withDevbox } from "https://deno.land/x/nix_installer_pipeline@v0.3.6/src/dagger/steps.ts";
 
 export const rubocop = async (client: Client, src = ".") => {
   const context = client.host().directory(src);
-  const ctr = client
-    .pipeline("rubocop")
-    .container()
-    .from("ruby:latest")
-    .withDirectory("/app", context, { exclude: ["vendor"] })
+  const baseCtr = withDevbox(
+    client
+      .pipeline("rubocop")
+      .container()
+      .from("alpine:latest")
+      .withExec(["apk", "update"])
+      .withExec(["apk", "add", "bash", "curl"])
+      .withMountedCache("/nix", client.cacheVolume("nix"))
+      .withMountedCache("/etc/nix", client.cacheVolume("nix-etc"))
+  );
+
+  const ctr = baseCtr
+    .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
+    .withDirectory("/app", context, {
+      exclude: ["vendor", ".git", ".devbox", ".fluentci"],
+    })
     .withWorkdir("/app")
-    .withExec(["ruby", "-v"])
-    .withExec(["bundle", "config", "set", "--local", "deployment", "true"])
-    .withExec(["bundle", "install", "-j", "$(nproc)"])
-    .withExec(["rubocop"]);
+    .withExec([
+      "sh",
+      "-c",
+      "eval $(devbox shell --print-env) && ruby -v && \
+       bundle config set --local deployment true && \
+       bundle install -j $(nproc) && \
+       bundle exec rubocop",
+    ]);
 
   const result = await ctr.stdout();
 
@@ -20,18 +36,33 @@ export const rubocop = async (client: Client, src = ".") => {
 
 export const rails = async (client: Client, src = ".") => {
   const context = client.host().directory(src);
-  const ctr = client
-    .pipeline("rails")
-    .container()
-    .from("ruby:latest")
-    .withDirectory("/app", context, { exclude: ["vendor"] })
+  const baseCtr = withDevbox(
+    client
+      .pipeline("rails")
+      .container()
+      .from("alpine:latest")
+      .withExec(["apk", "update"])
+      .withExec(["apk", "add", "bash", "curl"])
+      .withMountedCache("/nix", client.cacheVolume("nix"))
+      .withMountedCache("/etc/nix", client.cacheVolume("nix-etc"))
+  );
+
+  const ctr = baseCtr
+    .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
+    .withDirectory("/app", context, {
+      exclude: ["vendor", ".git", ".devbox", ".fluentci"],
+    })
     .withWorkdir("/app")
-    .withExec(["ruby", "-v"])
-    .withExec(["bundle", "config", "set", "--local", "deployment", "true"])
-    .withExec(["bundle", "install", "-j", "$(nproc)"])
-    .withExec(["rails", "db:migrate"])
-    .withExec(["rails", "db:seed"])
-    .withExec(["rails", "test"]);
+    .withExec([
+      "sh",
+      "-c",
+      "eval $(devbox shell --print-env) && ruby -v && \
+       bundle config set --local deployment true && \
+       bundle install -j $(nproc) && \
+       bundle exec rails db:migrate && \
+       bundle exec rails db:seed && \
+       bundle exec rails test",
+    ]);
 
   const result = await ctr.stdout();
 
@@ -40,16 +71,32 @@ export const rails = async (client: Client, src = ".") => {
 
 export const rspec = async (client: Client, src = ".") => {
   const context = client.host().directory(src);
-  const ctr = client
-    .pipeline("rspec")
-    .container()
-    .from("ruby:latest")
-    .withDirectory("/app", context, { exclude: ["vendor"] })
+  const baseCtr = withDevbox(
+    client
+      .pipeline("rspec")
+      .container()
+      .from("alpine:latest")
+      .withExec(["apk", "update"])
+      .withExec(["apk", "add", "bash", "curl"])
+      .withMountedCache("/nix", client.cacheVolume("nix"))
+      .withMountedCache("/etc/nix", client.cacheVolume("nix-etc"))
+  );
+
+  const ctr = baseCtr
+    .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
+    .withDirectory("/app", context, {
+      exclude: ["vendor", ".git", ".devbox", ".fluentci"],
+    })
     .withWorkdir("/app")
-    .withExec(["ruby", "-v"])
-    .withExec(["bundle", "config", "set", "--local", "deployment", "true"])
-    .withExec(["bundle", "install", "-j", "$(nproc)"])
-    .withExec(["rspec", "spec"]);
+    .withExec([
+      "sh",
+      "-c",
+      "eval $(devbox shell --print-env) && ruby -v && \
+       bundle config set --local deployment true && \
+       gem install rspec && \
+       bundle install -j $(nproc) && \
+       rspec spec",
+    ]);
 
   const result = await ctr.stdout();
 
@@ -65,21 +112,31 @@ export const herokuDeploy = async (client: Client, src = ".") => {
   }
 
   const context = client.host().directory(src);
-  const ctr = client
-    .pipeline("heroku_deploy")
-    .container()
-    .from("ruby:latest")
-    .withDirectory("/app", context, { exclude: ["vendor"] })
+  const baseCtr = withDevbox(
+    client
+      .pipeline("heroku_deploy")
+      .container()
+      .from("alpine:latest")
+      .withExec(["apk", "update"])
+      .withExec(["apk", "add", "bash", "curl"])
+      .withMountedCache("/nix", client.cacheVolume("nix"))
+      .withMountedCache("/etc/nix", client.cacheVolume("nix-etc"))
+  );
+
+  const ctr = baseCtr
+    .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
+    .withDirectory("/app", context, {
+      exclude: ["vendor", ".git", ".devbox", ".fluentci"],
+    })
     .withWorkdir("/app")
-    .withExec(["ruby", "-v"])
-    .withExec(["bundle", "config", "set", "--local", "deployment", "true"])
-    .withExec(["bundle", "install", "-j", "$(nproc)"])
-    .withExec(["gem", "install", "dpl"])
     .withExec([
-      "dpl",
-      "--provider=heroku",
-      `--app=${HEROKU_APP_NAME}`,
-      `--api-key=${HEROKU_PRODUCTION_KEY}`,
+      "sh",
+      "-c",
+      `eval $(devbox shell --print-env) && ruby -v && \
+       bundle config set --local deployment true && \
+       bundle install -j $(nproc) && \
+       gem install dpl && \
+       dpl --provider=heroku --app=${HEROKU_APP_NAME} --api-key=${HEROKU_PRODUCTION_KEY}`,
     ]);
 
   const result = await ctr.stdout();
