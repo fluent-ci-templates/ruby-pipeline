@@ -46,7 +46,7 @@ import { Dagger } from "https://deno.land/x/ruby_pipeline/mod.ts";
 
 const { rubocop, rails, rspec, herokuDeploy } = Dagger;
 
-export default function pipeline(src = ".") {
+function pipeline(src = ".") {
   connect(async (client: Client) => {
     await rubocop(client, src);
     await rails(client, src);
@@ -54,4 +54,6 @@ export default function pipeline(src = ".") {
     await herokuDeploy(client, src);
   });
 }
+
+pipeline();
 ```
