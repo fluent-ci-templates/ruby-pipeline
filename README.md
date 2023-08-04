@@ -8,7 +8,7 @@ A ready-to-use CI/CD Pipeline for Ruby projects.
 
 ## 🚀 Usage
 
-Run the following command:
+Run the following command in your project:
 
 ```bash
 dagger run fluentci ruby_pipeline
