@@ -38,12 +38,12 @@ dagger run fluentci .
 
 ## Jobs
 
-| Job          | Description      |
-| ------------ | ---------------- |
-| rubocop      | Runs Rubocop     |
-| rails        | Runs Rails tests |
-| rspec        | Runs RSpec tests |
-| herokuDeploy | Deploys to Heroku |
+| Job           | Description       |
+| ------------- | ----------------- |
+| rubocop       | Runs Rubocop      |
+| rails         | Runs Rails tests  |
+| rspec         | Runs RSpec tests  |
+| heroku_deploy | Deploys to Heroku |
 ## Programmatic usage
 
 You can also use this pipeline programmatically:
