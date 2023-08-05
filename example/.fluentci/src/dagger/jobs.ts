@@ -27,14 +27,14 @@ export const rubocop = async (client: Client, src = ".") => {
       exclude: ["vendor", ".git", ".devbox", ".fluentci"],
     })
     .withWorkdir("/app")
+    .withExec(["sh", "-c", "devbox run -- ruby --version"])
     .withExec([
       "sh",
       "-c",
-      "eval $(devbox shell --print-env) && ruby -v && \
-       bundle config set --local deployment true && \
-       bundle install -j $(nproc) && \
-       bundle exec rubocop",
-    ]);
+      "devbox run -- bundle config set --local deployment true",
+    ])
+    .withExec(["sh", "-c", "devbox run -- bundle install -j $(nproc)"])
+    .withExec(["sh", "-c", "devbox run -- bundle exec rubocop"]);
 
   const result = await ctr.stdout();
 
@@ -60,16 +60,16 @@ export const rails = async (client: Client, src = ".") => {
       exclude: ["vendor", ".git", ".devbox", ".fluentci"],
     })
     .withWorkdir("/app")
+    .withExec(["sh", "-c", "devbox run -- ruby --version"])
     .withExec([
       "sh",
       "-c",
-      "eval $(devbox shell --print-env) && ruby -v && \
-       bundle config set --local deployment true && \
-       bundle install -j $(nproc) && \
-       bundle exec rails db:migrate && \
-       bundle exec rails db:seed && \
-       bundle exec rails test",
-    ]);
+      "devbox run -- bundle config set --local deployment true",
+    ])
+    .withExec(["sh", "-c", "devbox run -- bundle install -j $(nproc)"])
+    .withExec(["sh", "-c", "devbox run -- bundle exec rails db:migrate"])
+    .withExec(["sh", "-c", "devbox run -- bundle exec rails db:seed"])
+    .withExec(["sh", "-c", "devbox run -- bundle exec rails test"]);
 
   const result = await ctr.stdout();
 
@@ -95,15 +95,15 @@ export const rspec = async (client: Client, src = ".") => {
       exclude: ["vendor", ".git", ".devbox", ".fluentci"],
     })
     .withWorkdir("/app")
+    .withExec(["sh", "-c", "devbox run -- ruby --version"])
     .withExec([
       "sh",
       "-c",
-      "eval $(devbox shell --print-env) && ruby -v && \
-       bundle config set --local deployment true && \
-       gem install rspec && \
-       bundle install -j $(nproc) && \
-       rspec spec",
-    ]);
+      "devbox run -- bundle config set --local deployment true",
+    ])
+    .withExec(["sh", "-c", "devbox run -- gem install rspec"])
+    .withExec(["sh", "-c", "devbox run -- bundle install -j $(nproc)"])
+    .withExec(["sh", "-c", "devbox run -- rspec spec"]);
 
   const result = await ctr.stdout();
 
@@ -136,14 +136,18 @@ export const herokuDeploy = async (client: Client, src = ".") => {
       exclude: ["vendor", ".git", ".devbox", ".fluentci"],
     })
     .withWorkdir("/app")
+    .withExec(["sh", "-c", "devbox run -- ruby --version"])
     .withExec([
       "sh",
       "-c",
-      `eval $(devbox shell --print-env) && ruby -v && \
-       bundle config set --local deployment true && \
-       bundle install -j $(nproc) && \
-       gem install dpl && \
-       dpl --provider=heroku --app=${HEROKU_APP_NAME} --api-key=${HEROKU_PRODUCTION_KEY}`,
+      "devbox run -- bundle config set --local deployment true",
+    ])
+    .withExec(["sh", "-c", "devbox run -- bundle install -j $(nproc)"])
+    .withExec(["sh", "-c", "devbox run -- gem install dpl"])
+    .withExec([
+      "sh",
+      "-c",
+      `devbox run -- dpl --provider=heroku --app=${HEROKU_APP_NAME} --api-key=${HEROKU_PRODUCTION_KEY}`,
     ]);
 
   const result = await ctr.stdout();
