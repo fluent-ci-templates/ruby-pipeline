@@ -1,6 +1,13 @@
 import Client from "@dagger.io/dagger";
 import { withDevbox } from "https://deno.land/x/nix_installer_pipeline@v0.3.6/src/dagger/steps.ts";
 
+export enum Job {
+  rubocop = "rubocop",
+  rails = "rails",
+  rspec = "rspec",
+  herokuDeploy = "herokuDeploy",
+}
+
 export const rubocop = async (client: Client, src = ".") => {
   const context = client.host().directory(src);
   const baseCtr = withDevbox(
@@ -142,4 +149,20 @@ export const herokuDeploy = async (client: Client, src = ".") => {
   const result = await ctr.stdout();
 
   console.log(result);
+};
+
+export type JobExec = (client: Client, src?: string) => Promise<void>;
+
+export const runnableJobs: Record<Job, JobExec> = {
+  [Job.rubocop]: rubocop,
+  [Job.rails]: rails,
+  [Job.rspec]: rspec,
+  [Job.herokuDeploy]: herokuDeploy,
+};
+
+export const jobDescriptions: Record<Job, string> = {
+  [Job.rubocop]: "Run rubocop",
+  [Job.rails]: "Run rails tests",
+  [Job.rspec]: "Run rspec tests",
+  [Job.herokuDeploy]: "Deploy to heroku",
 };
