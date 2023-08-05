@@ -5,14 +5,14 @@ export enum Job {
   rubocop = "rubocop",
   rails = "rails",
   rspec = "rspec",
-  herokuDeploy = "herokuDeploy",
+  herokuDeploy = "heroku_deploy",
 }
 
 export const rubocop = async (client: Client, src = ".") => {
   const context = client.host().directory(src);
   const baseCtr = withDevbox(
     client
-      .pipeline("rubocop")
+      .pipeline(Job.rubocop)
       .container()
       .from("alpine:latest")
       .withExec(["apk", "update"])
@@ -45,7 +45,7 @@ export const rails = async (client: Client, src = ".") => {
   const context = client.host().directory(src);
   const baseCtr = withDevbox(
     client
-      .pipeline("rails")
+      .pipeline(Job.rails)
       .container()
       .from("alpine:latest")
       .withExec(["apk", "update"])
@@ -80,7 +80,7 @@ export const rspec = async (client: Client, src = ".") => {
   const context = client.host().directory(src);
   const baseCtr = withDevbox(
     client
-      .pipeline("rspec")
+      .pipeline(Job.rspec)
       .container()
       .from("alpine:latest")
       .withExec(["apk", "update"])
@@ -121,7 +121,7 @@ export const herokuDeploy = async (client: Client, src = ".") => {
   const context = client.host().directory(src);
   const baseCtr = withDevbox(
     client
-      .pipeline("heroku_deploy")
+      .pipeline(Job.herokuDeploy)
       .container()
       .from("alpine:latest")
       .withExec(["apk", "update"])
