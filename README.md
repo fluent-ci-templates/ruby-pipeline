@@ -28,14 +28,6 @@ Now you can run the pipeline with:
 dagger run fluentci .
 ```
 
-## Environment variables
-
-| Variable               | Description                             |
-| ---------------------- | --------------------------------------- |
-|  HEROKU_APP_NAME       | The name of the Heroku app to deploy to |
-|  HEROKU_PRODUCTION_KEY | The API key to use to deploy to Heroku  |
-
-
 ## Jobs
 
 | Job           | Description       |
@@ -43,7 +35,7 @@ dagger run fluentci .
 | rubocop       | Runs Rubocop      |
 | rails         | Runs Rails tests  |
 | rspec         | Runs RSpec tests  |
-| heroku_deploy | Deploys to Heroku |
+
 ## Programmatic usage
 
 You can also use this pipeline programmatically:
@@ -52,14 +44,13 @@ You can also use this pipeline programmatically:
 import { Client, connect } from "https://esm.sh/@dagger.io/dagger@0.8.1";
 import { Dagger } from "https://deno.land/x/ruby_pipeline/mod.ts";
 
-const { rubocop, rails, rspec, herokuDeploy } = Dagger;
+const { rubocop, rails, rspec } = Dagger;
 
 function pipeline(src = ".") {
   connect(async (client: Client) => {
     await rubocop(client, src);
     await rails(client, src);
     await rspec(client, src);
-    await herokuDeploy(client, src);
   });
 }
 
