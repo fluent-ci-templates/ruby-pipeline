@@ -7,7 +7,7 @@
 The following command will generate a `azure-pipelines.yml` file in your project:
 
 ```bash
-fluentci ap init -t deno_pipeline
+fluentci ap init -t ruby_pipeline
 ```
 
 Generated file:
@@ -33,7 +33,7 @@ steps:
         sudo mv bin/dagger /usr/local/bin
         dagger version
     displayName: Setup Dagger
-  - script: dagger run fluentci deno_pipeline fmt lint test
+  - script: dagger run fluentci ruby_pipeline rspec
     displayName: Run Dagger Pipelines
 
 ```
