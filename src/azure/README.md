@@ -1,8 +1,8 @@
 # Azure Pipelines
 
-[![deno module](https://shield.deno.dev/x/codecov_pipeline)](https://deno.land/x/deno_pipeline)
+[![deno module](https://shield.deno.dev/x/ruby_pipeline)](https://deno.land/x/ruby_pipeline)
 ![deno compatibility](https://shield.deno.dev/deno/^1.34)
-[![](https://img.shields.io/codecov/c/gh/fluent-ci-templates/deno-pipeline)](https://codecov.io/gh/fluent-ci-templates/deno-pipeline)
+[![](https://img.shields.io/codecov/c/gh/fluent-ci-templates/ruby-pipeline)](https://codecov.io/gh/fluent-ci-templates/ruby-pipeline)
 
 The following command will generate a `azure-pipelines.yml` file in your project:
 
