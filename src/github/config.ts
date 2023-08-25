@@ -1,5 +1,9 @@
 import { JobSpec, Workflow } from "fluent_github_actions";
 
+/**
+ * Generates a GitHub Actions workflow for running tests on the main branch.
+ * @returns A `Workflow` object representing the generated workflow.
+ */
 export function generateYaml(): Workflow {
   const workflow = new Workflow("Tests");
 
