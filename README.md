@@ -43,9 +43,8 @@ You can also use this pipeline programmatically:
 
 ```ts
 import Client, { connect } from "https://sdk.fluentci.io/v0.1.4/mod.ts";
-import { Dagger } from "https://pkg.fluentci.io/ruby_pipeline/mod.ts";
+import { rubocop, rails, rspec } from "https://pkg.fluentci.io/ruby_pipeline/v0.6.0/mod.ts";
 
-const { rubocop, rails, rspec } = Dagger;
 
 function pipeline(src = ".") {
   connect(async (client: Client) => {

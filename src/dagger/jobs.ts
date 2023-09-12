@@ -1,11 +1,13 @@
 import Client from "@fluentci.io/dagger";
-import { withDevbox } from "https://deno.land/x/nix_installer_pipeline@v0.4.1/src/dagger/steps.ts";
+import { withDevbox } from "https://nix.fluentci.io/v0.5.0/mod.ts";
 
 export enum Job {
   rubocop = "rubocop",
   rails = "rails",
   rspec = "rspec",
 }
+
+export const exclude = ["vendor", ".git", ".devbox", ".fluentci"];
 
 export const rubocop = async (client: Client, src = ".") => {
   const context = client.host().directory(src);
@@ -23,7 +25,7 @@ export const rubocop = async (client: Client, src = ".") => {
   const ctr = baseCtr
     .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
     .withDirectory("/app", context, {
-      exclude: ["vendor", ".git", ".devbox", ".fluentci"],
+      exclude,
     })
     .withWorkdir("/app")
     .withExec(["sh", "-c", "devbox run -- ruby --version"])
@@ -55,9 +57,7 @@ export const rails = async (client: Client, src = ".") => {
 
   const ctr = baseCtr
     .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
-    .withDirectory("/app", context, {
-      exclude: ["vendor", ".git", ".devbox", ".fluentci"],
-    })
+    .withDirectory("/app", context, { exclude })
     .withWorkdir("/app")
     .withExec(["sh", "-c", "devbox run -- ruby --version"])
     .withExec([
@@ -90,9 +90,7 @@ export const rspec = async (client: Client, src = ".") => {
 
   const ctr = baseCtr
     .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
-    .withDirectory("/app", context, {
-      exclude: ["vendor", ".git", ".devbox", ".fluentci"],
-    })
+    .withDirectory("/app", context, { exclude })
     .withWorkdir("/app")
     .withExec(["sh", "-c", "devbox run -- ruby --version"])
     .withExec([
