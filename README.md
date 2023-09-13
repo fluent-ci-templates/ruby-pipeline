@@ -43,7 +43,7 @@ You can also use this pipeline programmatically:
 
 ```ts
 import Client, { connect } from "https://sdk.fluentci.io/v0.1.4/mod.ts";
-import { rubocop, rails, rspec } from "https://pkg.fluentci.io/ruby_pipeline@v0.6.0/mod.ts";
+import { rubocop, rails, rspec } from "https://pkg.fluentci.io/ruby_pipeline@v0.6.2/mod.ts";
 
 
 function pipeline(src = ".") {
