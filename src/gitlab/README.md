@@ -41,7 +41,7 @@ Generated file:
 tests:
   extends: .dagger
   script:
-    - dagger run fluentci ruby_pipeline rspec
+    - fluentci run ruby_pipeline rspec
 
 ```
 

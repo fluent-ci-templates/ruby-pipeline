@@ -29,7 +29,7 @@ phases:
       - dagger version
   build:
     commands:
-      - dagger run fluentci ruby_pipeline rspec
+      - fluentci run ruby_pipeline rspec
   post_build:
     commands:
       - echo Build completed on `date`

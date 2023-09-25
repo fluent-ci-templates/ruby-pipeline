@@ -38,7 +38,7 @@ export function generateYaml(): Workflow {
       },
       {
         name: "Run Dagger Pipelines",
-        run: "dagger run fluentci ruby_pipeline rspec",
+        run: "fluentci run ruby_pipeline rspec",
       },
     ],
   };
