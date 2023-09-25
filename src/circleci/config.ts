@@ -30,7 +30,7 @@ dagger version`,
     {
       run: {
         name: "Run Dagger Pipelines",
-        command: "dagger run fluentci ruby_pipeline rspec",
+        command: "fluentci run ruby_pipeline rspec",
       },
     },
   ]);

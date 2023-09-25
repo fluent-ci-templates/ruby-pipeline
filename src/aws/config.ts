@@ -19,7 +19,7 @@ export function generateYaml(): BuildSpec {
       ],
     })
     .phase("build", {
-      commands: ["dagger run fluentci ruby_pipeline rspec"],
+      commands: ["fluentci run ruby_pipeline rspec"],
     })
     .phase("post_build", {
       commands: ["echo Build completed on `date`"],

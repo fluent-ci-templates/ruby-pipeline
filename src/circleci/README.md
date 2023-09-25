@@ -34,7 +34,7 @@ jobs:
           dagger version
       - run:
           name: Upload Coverage
-          command: dagger run fluentci ruby_pipeline rspec
+          command: fluentci run ruby_pipeline rspec
     machine:
       image: ubuntu-2004:2023.07.1
 workflows:

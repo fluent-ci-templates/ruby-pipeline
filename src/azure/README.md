@@ -34,7 +34,7 @@ steps:
         sudo mv bin/dagger /usr/local/bin
         dagger version
     displayName: Setup Dagger
-  - script: dagger run fluentci ruby_pipeline rspec
+  - script: fluentci run ruby_pipeline rspec
     displayName: Run Dagger Pipelines
 
 ```
