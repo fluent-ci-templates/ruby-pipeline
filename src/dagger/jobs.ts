@@ -20,7 +20,7 @@ export const rubocop = async (src = ".") => {
       .withExec([
         "sh",
         "-c",
-        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox shellenv)"',
+        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox global shellenv)"',
       ])
       .withExec(["sh", "-c", "devbox version update"])
       .withExec(["sh", "-c", "which nix"])
@@ -59,7 +59,7 @@ export const rails = async (src = ".") => {
       .withExec([
         "sh",
         "-c",
-        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox shellenv)"',
+        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox global shellenv)"',
       ])
       .withExec(["sh", "-c", "devbox version update"]);
 
@@ -99,7 +99,7 @@ export const rspec = async (src = ".") => {
       .withExec([
         "sh",
         "-c",
-        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox shellenv)"',
+        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox global shellenv)"',
       ])
       .withExec(["sh", "-c", "devbox version update"]);
 
