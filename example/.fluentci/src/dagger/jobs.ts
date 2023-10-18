@@ -18,8 +18,9 @@ export const rubocop = async (src = ".") => {
       .withExec(["mv", "/nix/store", "/nix/store-orig"])
       .withMountedCache("/nix/store", client.cacheVolume("nix-cache"))
       .withExec(["sh", "-c", "cp -r /nix/store-orig/* /nix/store/"])
-      .withExec(["sh", "-c", "devbox version update"]);
-
+      .withExec(["sh", "-c", "devbox version update"])
+      .withExec(["sh", "-c", "which nix"])
+      .withExec(["sh", "-c", "nix --version"]);
     const ctr = baseCtr
       .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
       .withDirectory("/app", context, {
@@ -66,6 +67,8 @@ export const rails = async (src = ".") => {
       ])
       .withExec(["sh", "-c", "ls -ltr /nix"])
       .withExec(["sh", "-c", "ls -ltr /nix/store"])
+      .withExec(["sh", "-c", "which nix"])
+      .withExec(["sh", "-c", "nix --version"])
       .withExec(["sh", "-c", "devbox run -- bundle install -j $(nproc)"])
       .withExec(["sh", "-c", "devbox run -- bundle exec rails db:migrate"])
       .withExec(["sh", "-c", "devbox run -- bundle exec rails db:seed"])
