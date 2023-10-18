@@ -17,7 +17,11 @@ export const rubocop = async (src = ".") => {
       .from("ghcr.io/fluent-ci-templates/devbox:latest")
       .withExec(["mv", "/nix/store", "/nix/store-orig"])
       .withMountedCache("/nix/store", client.cacheVolume("nix-cache"))
-      .withExec(["sh", "-c", "cp -r /nix/store-orig/* /nix/store/"])
+      .withExec([
+        "sh",
+        "-c",
+        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox shellenv)"',
+      ])
       .withExec(["sh", "-c", "devbox version update"])
       .withExec(["sh", "-c", "which nix"])
       .withExec(["sh", "-c", "nix --version"]);
