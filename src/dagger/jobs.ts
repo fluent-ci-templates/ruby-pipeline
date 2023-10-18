@@ -1,4 +1,4 @@
-import Client, { connect, withDevbox } from "../../deps.ts";
+import Client, { connect } from "../../deps.ts";
 
 export enum Job {
   rubocop = "rubocop",
@@ -11,16 +11,14 @@ export const exclude = ["vendor", ".git", ".devbox", ".fluentci"];
 export const rubocop = async (src = ".") => {
   await connect(async (client: Client) => {
     const context = client.host().directory(src);
-    const baseCtr = withDevbox(
-      client
-        .pipeline(Job.rubocop)
-        .container()
-        .from("alpine:latest")
-        .withExec(["apk", "update"])
-        .withExec(["apk", "add", "bash", "curl"])
-        .withMountedCache("/nix", client.cacheVolume("nix"))
-        .withMountedCache("/etc/nix", client.cacheVolume("nix-etc"))
-    );
+    const baseCtr = client
+      .pipeline(Job.rubocop)
+      .container()
+      .from("ghcr.io/fluent-ci-templates/devbox:latest")
+      .withExec(["mv", "/nix/store", "/nix/store-orig"])
+      .withMountedCache("/nix/store", client.cacheVolume("nix-cache"))
+      .withExec(["sh", "-c", "cp -r /nix/store-orig/* /nix/store/"])
+      .withExec(["sh", "-c", "devbox version update"]);
 
     const ctr = baseCtr
       .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
@@ -47,16 +45,14 @@ export const rubocop = async (src = ".") => {
 export const rails = async (src = ".") => {
   await connect(async (client: Client) => {
     const context = client.host().directory(src);
-    const baseCtr = withDevbox(
-      client
-        .pipeline(Job.rails)
-        .container()
-        .from("alpine:latest")
-        .withExec(["apk", "update"])
-        .withExec(["apk", "add", "bash", "curl"])
-        .withMountedCache("/nix", client.cacheVolume("nix"))
-        .withMountedCache("/etc/nix", client.cacheVolume("nix-etc"))
-    );
+    const baseCtr = client
+      .pipeline(Job.rails)
+      .container()
+      .from("ghcr.io/fluent-ci-templates/devbox:latest")
+      .withExec(["mv", "/nix/store", "/nix/store-orig"])
+      .withMountedCache("/nix/store", client.cacheVolume("nix-cache"))
+      .withExec(["sh", "-c", "cp -r /nix/store-orig/* /nix/store/"])
+      .withExec(["sh", "-c", "devbox version update"]);
 
     const ctr = baseCtr
       .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
@@ -83,16 +79,14 @@ export const rails = async (src = ".") => {
 export const rspec = async (src = ".") => {
   await connect(async (client: Client) => {
     const context = client.host().directory(src);
-    const baseCtr = withDevbox(
-      client
-        .pipeline(Job.rspec)
-        .container()
-        .from("alpine:latest")
-        .withExec(["apk", "update"])
-        .withExec(["apk", "add", "bash", "curl"])
-        .withMountedCache("/nix", client.cacheVolume("nix"))
-        .withMountedCache("/etc/nix", client.cacheVolume("nix-etc"))
-    );
+    const baseCtr = client
+      .pipeline(Job.rspec)
+      .container()
+      .from("ghcr.io/fluent-ci-templates/devbox:latest")
+      .withExec(["mv", "/nix/store", "/nix/store-orig"])
+      .withMountedCache("/nix/store", client.cacheVolume("nix-cache"))
+      .withExec(["sh", "-c", "cp -r /nix/store-orig/* /nix/store/"])
+      .withExec(["sh", "-c", "devbox version update"]);
 
     const ctr = baseCtr
       .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
