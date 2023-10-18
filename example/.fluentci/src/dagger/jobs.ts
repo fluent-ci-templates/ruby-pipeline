@@ -64,6 +64,8 @@ export const rails = async (src = ".") => {
         "-c",
         "devbox run -- bundle config set --local deployment true",
       ])
+      .withExec(["sh", "-c", "ls -ltr /nix"])
+      .withExec(["sh", "-c", "ls -ltr /nix/store"])
       .withExec(["sh", "-c", "devbox run -- bundle install -j $(nproc)"])
       .withExec(["sh", "-c", "devbox run -- bundle exec rails db:migrate"])
       .withExec(["sh", "-c", "devbox run -- bundle exec rails db:seed"])
