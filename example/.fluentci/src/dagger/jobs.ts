@@ -1,0 +1,130 @@
+import Client, { connect, withDevbox } from "../../deps.ts";
+
+export enum Job {
+  rubocop = "rubocop",
+  rails = "rails",
+  rspec = "rspec",
+}
+
+export const exclude = ["vendor", ".git", ".devbox", ".fluentci"];
+
+export const rubocop = async (src = ".") => {
+  await connect(async (client: Client) => {
+    const context = client.host().directory(src);
+    const baseCtr = withDevbox(
+      client
+        .pipeline(Job.rubocop)
+        .container()
+        .from("alpine:latest")
+        .withExec(["apk", "update"])
+        .withExec(["apk", "add", "bash", "curl"])
+        .withMountedCache("/nix", client.cacheVolume("nix"))
+        .withMountedCache("/etc/nix", client.cacheVolume("nix-etc"))
+    );
+
+    const ctr = baseCtr
+      .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
+      .withDirectory("/app", context, {
+        exclude,
+      })
+      .withWorkdir("/app")
+      .withExec(["sh", "-c", "devbox run -- ruby --version"])
+      .withExec([
+        "sh",
+        "-c",
+        "devbox run -- bundle config set --local deployment true",
+      ])
+      .withExec(["sh", "-c", "devbox run -- bundle install -j $(nproc)"])
+      .withExec(["sh", "-c", "devbox run -- bundle exec rubocop"]);
+
+    const result = await ctr.stdout();
+
+    console.log(result);
+  });
+  return "Done";
+};
+
+export const rails = async (src = ".") => {
+  await connect(async (client: Client) => {
+    const context = client.host().directory(src);
+    const baseCtr = withDevbox(
+      client
+        .pipeline(Job.rails)
+        .container()
+        .from("alpine:latest")
+        .withExec(["apk", "update"])
+        .withExec(["apk", "add", "bash", "curl"])
+        .withMountedCache("/nix", client.cacheVolume("nix"))
+        .withMountedCache("/etc/nix", client.cacheVolume("nix-etc"))
+    );
+
+    const ctr = baseCtr
+      .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
+      .withDirectory("/app", context, { exclude })
+      .withWorkdir("/app")
+      .withExec(["sh", "-c", "devbox run -- ruby --version"])
+      .withExec([
+        "sh",
+        "-c",
+        "devbox run -- bundle config set --local deployment true",
+      ])
+      .withExec(["sh", "-c", "devbox run -- bundle install -j $(nproc)"])
+      .withExec(["sh", "-c", "devbox run -- bundle exec rails db:migrate"])
+      .withExec(["sh", "-c", "devbox run -- bundle exec rails db:seed"])
+      .withExec(["sh", "-c", "devbox run -- bundle exec rails test"]);
+
+    const result = await ctr.stdout();
+
+    console.log(result);
+  });
+  return "Done";
+};
+
+export const rspec = async (src = ".") => {
+  await connect(async (client: Client) => {
+    const context = client.host().directory(src);
+    const baseCtr = withDevbox(
+      client
+        .pipeline(Job.rspec)
+        .container()
+        .from("alpine:latest")
+        .withExec(["apk", "update"])
+        .withExec(["apk", "add", "bash", "curl"])
+        .withMountedCache("/nix", client.cacheVolume("nix"))
+        .withMountedCache("/etc/nix", client.cacheVolume("nix-etc"))
+    );
+
+    const ctr = baseCtr
+      .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
+      .withDirectory("/app", context, { exclude })
+      .withWorkdir("/app")
+      .withExec(["sh", "-c", "devbox run -- ruby --version"])
+      .withExec([
+        "sh",
+        "-c",
+        "devbox run -- bundle config set --local deployment true",
+      ])
+      .withExec(["sh", "-c", "devbox run -- gem install rspec"])
+      .withExec(["sh", "-c", "devbox run -- bundle install -j $(nproc)"])
+      .withExec(["sh", "-c", "devbox run -- rspec spec"]);
+
+    const result = await ctr.stdout();
+
+    console.log(result);
+  });
+  return "Done";
+};
+
+export type JobExec = (src?: string) => Promise<string>;
+
+export const runnableJobs: Record<Job, JobExec> = {
+  [Job.rubocop]: rubocop,
+  [Job.rails]: rails,
+  [Job.rspec]: rspec,
+};
+
+export const jobDescriptions: Record<Job, string> = {
+  [Job.rubocop]: "Run rubocop",
+  [Job.rails]: "Run rails tests",
+  [Job.rspec]: "Run rspec tests",
+};
