@@ -18,8 +18,9 @@ export const rubocop = async (src = ".") => {
       .withExec(["mv", "/nix/store", "/nix/store-orig"])
       .withMountedCache("/nix/store", client.cacheVolume("nix-cache"))
       .withExec(["sh", "-c", "cp -r /nix/store-orig/* /nix/store/"])
-      .withExec(["sh", "-c", "devbox version update"]);
-
+      .withExec(["sh", "-c", "devbox version update"])
+      .withExec(["sh", "-c", "which nix"])
+      .withExec(["sh", "-c", "nix --version"]);
     const ctr = baseCtr
       .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
       .withDirectory("/app", context, {
@@ -51,7 +52,11 @@ export const rails = async (src = ".") => {
       .from("ghcr.io/fluent-ci-templates/devbox:latest")
       .withExec(["mv", "/nix/store", "/nix/store-orig"])
       .withMountedCache("/nix/store", client.cacheVolume("nix-cache"))
-      .withExec(["sh", "-c", "cp -r /nix/store-orig/* /nix/store/"])
+      .withExec([
+        "sh",
+        "-c",
+        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox shellenv)"',
+      ])
       .withExec(["sh", "-c", "devbox version update"]);
 
     const ctr = baseCtr
@@ -64,6 +69,8 @@ export const rails = async (src = ".") => {
         "-c",
         "devbox run -- bundle config set --local deployment true",
       ])
+      .withExec(["sh", "-c", "which nix"])
+      .withExec(["sh", "-c", "nix --version"])
       .withExec(["sh", "-c", "devbox run -- bundle install -j $(nproc)"])
       .withExec(["sh", "-c", "devbox run -- bundle exec rails db:migrate"])
       .withExec(["sh", "-c", "devbox run -- bundle exec rails db:seed"])
@@ -85,7 +92,11 @@ export const rspec = async (src = ".") => {
       .from("ghcr.io/fluent-ci-templates/devbox:latest")
       .withExec(["mv", "/nix/store", "/nix/store-orig"])
       .withMountedCache("/nix/store", client.cacheVolume("nix-cache"))
-      .withExec(["sh", "-c", "cp -r /nix/store-orig/* /nix/store/"])
+      .withExec([
+        "sh",
+        "-c",
+        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox shellenv)"',
+      ])
       .withExec(["sh", "-c", "devbox version update"]);
 
     const ctr = baseCtr
