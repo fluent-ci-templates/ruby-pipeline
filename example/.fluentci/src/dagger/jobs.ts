@@ -52,7 +52,11 @@ export const rails = async (src = ".") => {
       .from("ghcr.io/fluent-ci-templates/devbox:latest")
       .withExec(["mv", "/nix/store", "/nix/store-orig"])
       .withMountedCache("/nix/store", client.cacheVolume("nix-cache"))
-      .withExec(["sh", "-c", "cp -r /nix/store-orig/* /nix/store/"])
+      .withExec([
+        "sh",
+        "-c",
+        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox global shellenv)"',
+      ])
       .withExec(["sh", "-c", "devbox version update"]);
 
     const ctr = baseCtr
