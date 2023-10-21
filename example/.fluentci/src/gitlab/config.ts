@@ -1,5 +1,9 @@
 import { GitlabCI, Job } from "fluent_gitlab_ci";
 
+/**
+ * Generates GitLab CI YAML configuration.
+ * @returns {GitlabCI} GitLab CI configuration object.
+ */
 export function generateYaml(): GitlabCI {
   const docker = new Job()
     .image("denoland/deno:alpine")
@@ -25,7 +29,7 @@ export function generateYaml(): GitlabCI {
 
   const tests = new Job()
     .extends(".dagger")
-    .script("dagger run fluentci ruby_pipeline rspec");
+    .script("fluentci run ruby_pipeline rspec");
 
   return new GitlabCI()
     .addJob(".docker", docker)

@@ -1,12 +1,16 @@
-const command = new Deno.Command(Deno.execPath(), {
-  args: [
-    "run",
-    "-A",
-    "--import-map=https://deno.land/x/ruby_pipeline/import_map.json",
-    "https://deno.land/x/ruby_pipeline/src/dagger/runner.ts",
-  ],
-});
+import Client, { connect } from "https://sdk.fluentci.io/v0.1.9/mod.ts";
+import {
+  rubocop,
+  rails,
+  rspec,
+} from "https://pkg.fluentci.io/ruby_pipeline@v0.6.5/mod.ts";
 
-const { stdout } = await command.output();
+function pipeline(src = ".") {
+  connect(async (client: Client) => {
+    await rubocop(client, src);
+    await rails(client, src);
+    await rspec(client, src);
+  });
+}
 
-console.log(new TextDecoder().decode(stdout));
+pipeline();

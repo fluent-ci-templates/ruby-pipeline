@@ -1,5 +1,9 @@
 import { BuildSpec } from "fluent_aws_codepipeline";
 
+/**
+ * Generates a YAML build specification for AWS CodePipeline.
+ * @returns The generated BuildSpec object.
+ */
 export function generateYaml(): BuildSpec {
   const buildspec = new BuildSpec();
   buildspec
@@ -15,7 +19,7 @@ export function generateYaml(): BuildSpec {
       ],
     })
     .phase("build", {
-      commands: ["dagger run fluentci ruby_pipeline rspec"],
+      commands: ["fluentci run ruby_pipeline rspec"],
     })
     .phase("post_build", {
       commands: ["echo Build completed on `date`"],

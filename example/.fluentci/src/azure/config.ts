@@ -1,5 +1,9 @@
 import { AzurePipeline } from "fluent_azure_pipelines";
 
+/**
+ * Generates the YAML for the Azure Pipeline.
+ * @returns An instance of AzurePipeline.
+ */
 export function generateYaml(): AzurePipeline {
   const azurePipeline = new AzurePipeline();
 
@@ -34,7 +38,7 @@ export function generateYaml(): AzurePipeline {
       displayName: "Setup Dagger",
     })
     .step({
-      script: "dagger run fluentci ruby_pipeline rspec",
+      script: "fluentci run ruby_pipeline rspec",
       displayName: "Run Dagger Pipelines",
     });
   return azurePipeline;

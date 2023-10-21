@@ -1,5 +1,6 @@
 # Github Actions
 
+[![fluentci pipeline](https://img.shields.io/badge/dynamic/json?label=pkg.fluentci.io&labelColor=%23000&color=%23460cf1&url=https%3A%2F%2Fapi.fluentci.io%2Fv1%2Fpipeline%2Fruby_pipeline&query=%24.version)](https://pkg.fluentci.io/ruby_pipeline)
 [![deno module](https://shield.deno.dev/x/ruby_pipeline)](https://deno.land/x/ruby_pipeline)
 ![deno compatibility](https://shield.deno.dev/deno/^1.34)
 [![](https://img.shields.io/codecov/c/gh/fluent-ci-templates/ruby-pipeline)](https://codecov.io/gh/fluent-ci-templates/ruby-pipeline)
@@ -42,7 +43,7 @@ jobs:
             sudo mv bin/dagger /usr/local/bin
             dagger version
       - name: Run Dagger Pipelines
-        run: dagger run fluentci ruby_pipeline rspec
+        run: fluentci run ruby_pipeline rspec
 ```
 
 Feel free to edit the template generator at `.fluentci/src/github/config.ts` to your needs.
