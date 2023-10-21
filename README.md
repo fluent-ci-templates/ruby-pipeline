@@ -37,6 +37,14 @@ fluentci run .
 | rails         | Runs Rails tests  |
 | rspec         | Runs RSpec tests  |
 
+```graphql
+rails(src: String!): String
+
+rspec(src: String!): String
+
+rubocop(src: String!): String
+```
+
 ## Programmatic usage
 
 You can also use this pipeline programmatically:
