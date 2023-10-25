@@ -50,7 +50,7 @@ rubocop(src: String!): String
 You can also use this pipeline programmatically:
 
 ```ts
-import { rubocop, rails, rspec } from "https://pkg.fluentci.io/ruby_pipeline@v0.7.0/mod.ts";
+import { rubocop, rails, rspec } from "https://pkg.fluentci.io/ruby_pipeline@v0.7.1/mod.ts";
 
 await rubocop();
 await rails();
