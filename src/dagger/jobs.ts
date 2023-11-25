@@ -14,13 +14,13 @@ export const rubocop = async (src = ".") => {
     const baseCtr = client
       .pipeline(Job.rubocop)
       .container()
-      .from("ghcr.io/fluent-ci-templates/devbox:latest")
+      .from("ghcr.io/fluentci-io/devbox:latest")
       .withExec(["mv", "/nix/store", "/nix/store-orig"])
       .withMountedCache("/nix/store", client.cacheVolume("nix-cache"))
       .withExec([
         "sh",
         "-c",
-        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox global shellenv)"',
+        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox global shellenv --recompute)"',
       ])
       .withExec(["sh", "-c", "devbox version update"])
       .withExec(["sh", "-c", "which nix"])
@@ -59,7 +59,7 @@ export const rails = async (src = ".") => {
       .withExec([
         "sh",
         "-c",
-        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox global shellenv)"',
+        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox global shellenv --recompute)"',
       ])
       .withExec(["sh", "-c", "devbox version update"]);
 
@@ -99,7 +99,7 @@ export const rspec = async (src = ".") => {
       .withExec([
         "sh",
         "-c",
-        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox global shellenv)"',
+        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox global shellenv --recompute)"',
       ])
       .withExec(["sh", "-c", "devbox version update"]);
 
