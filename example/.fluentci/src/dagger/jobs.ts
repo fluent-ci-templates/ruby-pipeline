@@ -1,4 +1,6 @@
-import Client, { connect } from "../../deps.ts";
+import { Client, Directory } from "../../sdk/client.gen.ts";
+import { connect } from "../../sdk/connect.ts";
+import { getDirectory } from "./lib.ts";
 
 export enum Job {
   rubocop = "rubocop",
@@ -8,9 +10,17 @@ export enum Job {
 
 export const exclude = ["vendor", ".git", ".devbox", ".fluentci"];
 
-export const rubocop = async (src = ".") => {
+/**
+ * @function
+ * @description Run rubocop
+ * @param {string | Directory} src
+ * @returns {Promise<string>}
+ */
+export async function rubocop(
+  src: Directory | string | undefined = "."
+): Promise<string> {
   await connect(async (client: Client) => {
-    const context = client.host().directory(src);
+    const context = getDirectory(client, src);
     const baseCtr = client
       .pipeline(Job.rubocop)
       .container()
@@ -20,7 +30,11 @@ export const rubocop = async (src = ".") => {
       .withExec([
         "sh",
         "-c",
+<<<<<<< HEAD
         'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox global shellenv --recompute)"',
+=======
+        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox global shellenv)"',
+>>>>>>> 1a3383d (remove GraphQL, use jsdocs for exported functions)
       ])
       .withExec(["sh", "-c", "devbox version update"])
       .withExec(["sh", "-c", "which nix"])
@@ -45,11 +59,19 @@ export const rubocop = async (src = ".") => {
     console.log(result);
   });
   return "Done";
-};
+}
 
-export const rails = async (src = ".") => {
+/**
+ * @function
+ * @description Run rails tests
+ * @param {string | Directory} src
+ * @returns {Promise<string>}
+ */
+export async function rails(
+  src: Directory | string | undefined = "."
+): Promise<string> {
   await connect(async (client: Client) => {
-    const context = client.host().directory(src);
+    const context = getDirectory(client, src);
     const baseCtr = client
       .pipeline(Job.rails)
       .container()
@@ -85,11 +107,19 @@ export const rails = async (src = ".") => {
     console.log(result);
   });
   return "Done";
-};
+}
 
-export const rspec = async (src = ".") => {
+/**
+ * @function
+ * @description Run rspec tests
+ * @param {string | Directory} src
+ * @returns {Promise<string>}
+ */
+export async function rspec(
+  src: Directory | string | undefined = "."
+): Promise<string> {
   await connect(async (client: Client) => {
-    const context = client.host().directory(src);
+    const context = getDirectory(client, src);
     const baseCtr = client
       .pipeline(Job.rspec)
       .container()
@@ -122,9 +152,9 @@ export const rspec = async (src = ".") => {
     console.log(result);
   });
   return "Done";
-};
+}
 
-export type JobExec = (src?: string) => Promise<string>;
+export type JobExec = (src?: Directory | string) => Promise<string>;
 
 export const runnableJobs: Record<Job, JobExec> = {
   [Job.rubocop]: rubocop,

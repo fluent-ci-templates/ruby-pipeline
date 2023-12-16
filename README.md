@@ -29,6 +29,14 @@ Now you can run the pipeline with:
 fluentci run .
 ```
 
+## Dagger Module
+
+Use as a [Dagger](https://dagger.io) module:
+
+```bash
+dagger mod install github.com/fluent-ci-templates/ruby-pipeline@mod
+```
+
 ## Jobs
 
 | Job           | Description       |
@@ -37,12 +45,18 @@ fluentci run .
 | rails         | Runs Rails tests  |
 | rspec         | Runs RSpec tests  |
 
-```graphql
-rails(src: String!): String
+```typescript
+rails(
+  src: Directory | string
+): Promise<string>
 
-rspec(src: String!): String
+rspec(
+  src: Directory | string
+): Promise<string>
 
-rubocop(src: String!): String
+rubocop(
+  src: Directory | string
+): Promise<string>
 ```
 
 ## Programmatic usage
