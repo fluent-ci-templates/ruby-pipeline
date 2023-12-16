@@ -1,16 +1,4 @@
 export { assertEquals } from "https://deno.land/std@0.191.0/testing/asserts.ts";
-<<<<<<< HEAD
-import Client from "https://sdk.fluentci.io/v0.2.0/mod.ts";
-export default Client;
-
-export {
-  connect,
-  uploadContext,
-  CacheSharingMode,
-} from "https://sdk.fluentci.io/v0.2.0/mod.ts";
-export { brightGreen } from "https://deno.land/std@0.191.0/fmt/colors.ts";
-export { withDevbox } from "https://nix.fluentci.io/v0.5.2/src/dagger/steps.ts";
-=======
 import { Client } from "./sdk/client.gen.ts";
 export default Client;
 
@@ -19,7 +7,6 @@ export { Directory, Secret, File } from "./sdk/client.gen.ts";
 export { connect, uploadContext } from "https://sdk.fluentci.io/v0.3.0/mod.ts";
 export { brightGreen } from "https://deno.land/std@0.191.0/fmt/colors.ts";
 export { withDevbox } from "https://nix.fluentci.io/v0.5.3/src/dagger/steps.ts";
->>>>>>> 1a3383d (remove GraphQL, use jsdocs for exported functions)
 export { stringifyTree } from "https://esm.sh/stringify-tree@1.1.1";
 import gql from "https://esm.sh/graphql-tag@2.12.6";
 export { gql };

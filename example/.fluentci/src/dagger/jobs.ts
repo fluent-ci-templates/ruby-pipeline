@@ -30,11 +30,7 @@ export async function rubocop(
       .withExec([
         "sh",
         "-c",
-<<<<<<< HEAD
         'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox global shellenv --recompute)"',
-=======
-        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox global shellenv)"',
->>>>>>> 1a3383d (remove GraphQL, use jsdocs for exported functions)
       ])
       .withExec(["sh", "-c", "devbox version update"])
       .withExec(["sh", "-c", "which nix"])
@@ -75,7 +71,7 @@ export async function rails(
     const baseCtr = client
       .pipeline(Job.rails)
       .container()
-      .from("ghcr.io/fluentci-io/devbox:latest")
+      .from("ghcr.io/fluent-ci-templates/devbox:latest")
       .withExec(["mv", "/nix/store", "/nix/store-orig"])
       .withMountedCache("/nix/store", client.cacheVolume("nix-cache"))
       .withExec([
@@ -123,7 +119,7 @@ export async function rspec(
     const baseCtr = client
       .pipeline(Job.rspec)
       .container()
-      .from("ghcr.io/fluentci-io/devbox:latest")
+      .from("ghcr.io/fluent-ci-templates/devbox:latest")
       .withExec(["mv", "/nix/store", "/nix/store-orig"])
       .withMountedCache("/nix/store", client.cacheVolume("nix-cache"))
       .withExec([
