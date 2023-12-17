@@ -25,7 +25,6 @@ export async function rubocop(
       .pipeline(Job.rubocop)
       .container()
       .from("ghcr.io/fluentci-io/devbox:latest")
-      .withExec(["sh", "-c", "devbox version update"])
       .withExec(["sh", "-c", "which nix"])
       .withExec(["sh", "-c", "nix --version"]);
     const ctr = baseCtr
@@ -64,8 +63,7 @@ export async function rails(
     const baseCtr = client
       .pipeline(Job.rails)
       .container()
-      .from("ghcr.io/fluent-ci-templates/devbox:latest")
-      .withExec(["sh", "-c", "devbox version update"]);
+      .from("ghcr.io/fluent-ci-templates/devbox:latest");
 
     const ctr = baseCtr
       .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
@@ -105,8 +103,7 @@ export async function rspec(
     const baseCtr = client
       .pipeline(Job.rspec)
       .container()
-      .from("ghcr.io/fluent-ci-templates/devbox:latest")
-      .withExec(["sh", "-c", "devbox version update"]);
+      .from("ghcr.io/fluent-ci-templates/devbox:latest");
 
     const ctr = baseCtr
       .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
