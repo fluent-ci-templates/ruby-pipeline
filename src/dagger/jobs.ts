@@ -64,8 +64,7 @@ export async function rails(
     const baseCtr = client
       .pipeline(Job.rails)
       .container()
-      .from("ghcr.io/fluent-ci-templates/devbox:latest")
-      .withExec(["sh", "-c", "devbox version update"]);
+      .from("ghcr.io/fluent-ci-templates/devbox:latest");
 
     const ctr = baseCtr
       .withMountedCache("/app/vendor", client.cacheVolume("bundle-cache"))
