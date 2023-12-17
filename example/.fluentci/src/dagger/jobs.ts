@@ -25,13 +25,6 @@ export async function rubocop(
       .pipeline(Job.rubocop)
       .container()
       .from("ghcr.io/fluentci-io/devbox:latest")
-      .withExec(["mv", "/nix/store", "/nix/store-orig"])
-      .withMountedCache("/nix/store", client.cacheVolume("nix-cache"))
-      .withExec([
-        "sh",
-        "-c",
-        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox global shellenv --recompute)"',
-      ])
       .withExec(["sh", "-c", "devbox version update"])
       .withExec(["sh", "-c", "which nix"])
       .withExec(["sh", "-c", "nix --version"]);
@@ -72,13 +65,6 @@ export async function rails(
       .pipeline(Job.rails)
       .container()
       .from("ghcr.io/fluent-ci-templates/devbox:latest")
-      .withExec(["mv", "/nix/store", "/nix/store-orig"])
-      .withMountedCache("/nix/store", client.cacheVolume("nix-cache"))
-      .withExec([
-        "sh",
-        "-c",
-        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox global shellenv --recompute)"',
-      ])
       .withExec(["sh", "-c", "devbox version update"]);
 
     const ctr = baseCtr
@@ -120,13 +106,6 @@ export async function rspec(
       .pipeline(Job.rspec)
       .container()
       .from("ghcr.io/fluent-ci-templates/devbox:latest")
-      .withExec(["mv", "/nix/store", "/nix/store-orig"])
-      .withMountedCache("/nix/store", client.cacheVolume("nix-cache"))
-      .withExec([
-        "sh",
-        "-c",
-        'cp -r /nix/store-orig/* /nix/store/ && eval "$(devbox global shellenv --recompute)"',
-      ])
       .withExec(["sh", "-c", "devbox version update"]);
 
     const ctr = baseCtr
