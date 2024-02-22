@@ -1,3 +1,8 @@
+/**
+ * @module ruby
+ * @description This module provides a set of functions to run ruby related tasks
+ */
+
 import { dag, Directory } from "../../sdk/client.gen.ts";
 import { getDirectory } from "./lib.ts";
 
