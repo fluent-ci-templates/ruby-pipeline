@@ -1,8 +1,4 @@
-import {
-  rubocop,
-  rails,
-  rspec,
-} from "https://pkg.fluentci.io/ruby_pipeline@v0.8.3/mod.ts";
+import { rubocop, rails, rspec } from "jsr:@fluentci/ruby";
 
 await rubocop();
 await rails();

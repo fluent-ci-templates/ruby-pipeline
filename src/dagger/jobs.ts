@@ -15,6 +15,8 @@ export enum Job {
 export const exclude = ["vendor", ".git", ".devbox", ".fluentci"];
 
 /**
+ * Run rubocop
+ *
  * @function
  * @description Run rubocop
  * @param {string | Directory} src
@@ -23,7 +25,7 @@ export const exclude = ["vendor", ".git", ".devbox", ".fluentci"];
 export async function rubocop(
   src: Directory | string | undefined = "."
 ): Promise<string> {
-  const context = await getDirectory(dag, src);
+  const context = await getDirectory(src);
   const baseCtr = dag
     .pipeline(Job.rubocop)
     .container()
@@ -45,11 +47,12 @@ export async function rubocop(
     .withExec(["sh", "-c", "devbox run -- bundle install -j $(nproc)"])
     .withExec(["sh", "-c", "devbox run -- bundle exec rubocop"]);
 
-  const result = await ctr.stdout();
-  return result;
+  return ctr.stdout();
 }
 
 /**
+ * Run rails tests
+ *
  * @function
  * @description Run rails tests
  * @param {string | Directory} src
@@ -58,7 +61,7 @@ export async function rubocop(
 export async function rails(
   src: Directory | string | undefined = "."
 ): Promise<string> {
-  const context = await getDirectory(dag, src);
+  const context = await getDirectory(src);
   const baseCtr = dag
     .pipeline(Job.rails)
     .container()
@@ -81,11 +84,12 @@ export async function rails(
     .withExec(["sh", "-c", "devbox run -- bundle exec rails db:seed"])
     .withExec(["sh", "-c", "devbox run -- bundle exec rails test"]);
 
-  const result = await ctr.stdout();
-  return result;
+  return ctr.stdout();
 }
 
 /**
+ * Run rspec tests
+ *
  * @function
  * @description Run rspec tests
  * @param {string | Directory} src
@@ -94,7 +98,7 @@ export async function rails(
 export async function rspec(
   src: Directory | string | undefined = "."
 ): Promise<string> {
-  const context = await getDirectory(dag, src);
+  const context = await getDirectory(src);
   const baseCtr = dag
     .pipeline(Job.rspec)
     .container()
@@ -114,8 +118,7 @@ export async function rspec(
     .withExec(["sh", "-c", "devbox run -- bundle install -j $(nproc)"])
     .withExec(["sh", "-c", "devbox run -- rspec spec"]);
 
-  const result = await ctr.stdout();
-  return result;
+  return ctr.stdout();
 }
 
 export type JobExec = (src?: Directory | string) => Promise<string>;
