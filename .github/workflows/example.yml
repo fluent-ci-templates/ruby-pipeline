@@ -18,7 +18,7 @@ jobs:
           args: |
             rubocop
             rails_test
-            rspec
+            rspec spec
           working-directory: example
       - name: Run Dagger Pipelines
         run: dagger run deno run -A ../src/dagger/runner.ts rubocop rails rspec

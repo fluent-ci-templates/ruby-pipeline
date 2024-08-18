@@ -1,8 +1,6 @@
 [package]
-authors = [
-  "Tsiry Sandratraina <tsiry.sndr@fluentci.io>",
-]
+authors = ["Tsiry Sandratraina <tsiry.sndr@fluentci.io>"]
 description = "CI/CD Plugin for Ruby"
 license = "MIT"
 name = "ruby"
-version = "0.10.0"
+version = "0.10.1"

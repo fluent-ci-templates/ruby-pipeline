@@ -3,13 +3,14 @@
  * @description This module provides a set of functions to run ruby related tasks
  */
 
-import { dag, Directory } from "../../sdk/client.gen.ts";
-import { getDirectory } from "./lib.ts";
+import { dag, type Directory } from "../sdk/client.gen.ts";
+import { getDirectory } from "./helpers.ts";
 
 export enum Job {
   rubocop = "rubocop",
   rails = "rails",
   rspec = "rspec",
+  bundleExec = "bundleExec",
 }
 
 export const exclude = ["vendor", ".git", ".devbox", ".fluentci"];
@@ -93,10 +94,12 @@ export async function rails(
  * @function
  * @description Run rspec tests
  * @param {string | Directory} src
+ * @param {string} dir directory that contains the tests
  * @returns {Promise<string>}
  */
 export async function rspec(
-  src: Directory | string | undefined = "."
+  src: Directory | string | undefined = ".",
+  dir: string = "spec"
 ): Promise<string> {
   const context = await getDirectory(src);
   const baseCtr = dag
@@ -116,21 +119,61 @@ export async function rspec(
     ])
     .withExec(["sh", "-c", "devbox run -- gem install rspec"])
     .withExec(["sh", "-c", "devbox run -- bundle install -j $(nproc)"])
-    .withExec(["sh", "-c", "devbox run -- rspec spec"]);
+    .withExec(["sh", "-c", "devbox run -- rspec", dir]);
 
   return ctr.stdout();
 }
 
-export type JobExec = (src?: Directory | string) => Promise<string>;
+/**
+ * Run bundle exec
+ *
+ * @function
+ * @description Run bundle exec
+ * @param {string | Directory} src
+ * @param {string} task task to run
+ * @returns {Promise<string>}
+ */
+export async function bundleExec(
+  src: Directory | string | undefined = ".",
+  task: string = "rake"
+): Promise<string> {
+  const context = await getDirectory(src);
+  const baseCtr = dag
+    .pipeline(Job.rspec)
+    .container()
+    .from("ghcr.io/fluent-ci-templates/devbox:latest");
+
+  const ctr = baseCtr
+    .withMountedCache("/app/vendor", dag.cacheVolume("bundle-cache"))
+    .withDirectory("/app", context, { exclude })
+    .withWorkdir("/app")
+    .withExec(["sh", "-c", "devbox run -- ruby --version"])
+    .withExec([
+      "sh",
+      "-c",
+      "devbox run -- bundle config set --local deployment true",
+    ])
+    .withExec(["sh", "-c", "devbox run -- bundle install -j $(nproc)"])
+    .withExec(["sh", "-c", "devbox run -- bundle exec", task]);
+
+  return ctr.stdout();
+}
+
+export type JobExec =
+  | ((src?: Directory | string) => Promise<string>)
+  | ((src?: Directory | string, dir?: string) => Promise<string>)
+  | ((src?: Directory | string, task?: string) => Promise<string>);
 
 export const runnableJobs: Record<Job, JobExec> = {
   [Job.rubocop]: rubocop,
   [Job.rails]: rails,
   [Job.rspec]: rspec,
+  [Job.bundleExec]: bundleExec,
 };
 
 export const jobDescriptions: Record<Job, string> = {
   [Job.rubocop]: "Run rubocop",
   [Job.rails]: "Run rails tests",
   [Job.rspec]: "Run rspec tests",
+  [Job.bundleExec]: "Run bundle exec",
 };

@@ -61,7 +61,24 @@ pub fn rspec(args: String) -> FnResult<String> {
         ])?
         .with_exec(vec!["devbox run -- gem install rspec"])?
         .with_exec(vec!["devbox run -- bundle install -j $(nproc)"])?
-        .with_exec(vec!["devbox run -- rspec spec", &args])?
+        .with_exec(vec!["devbox run -- rspec", &args])?
+        .stdout()?;
+    Ok(stdout)
+}
+
+
+#[plugin_fn]
+pub fn bundle_exec(args: String) -> FnResult<String> {
+    setup_devbox()?;
+
+    let stdout = dag()
+        .devbox()?
+        .with_exec(vec!["devbox run -- ruby --version"])?
+        .with_exec(vec![
+            "devbox run -- bundle config set --local deployment true",
+        ])?
+        .with_exec(vec!["devbox run -- bundle install -j $(nproc)"])?
+        .with_exec(vec!["devbox run -- bundle exec", &args])?
         .stdout()?;
     Ok(stdout)
 }
