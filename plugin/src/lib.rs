@@ -25,7 +25,9 @@ pub fn rubocop(args: String) -> FnResult<String> {
         .with_exec(vec![
             "devbox run -- bundle config set --local deployment true",
         ])?
-        .with_exec(vec!["devbox run -- bundle install -j $(nproc)"])?
+        .with_exec(vec![
+            "devbox run -- bundle install -j $(nproc 2>/dev/null || sysctl -n hw.logicalcpu)",
+        ])?
         .with_exec(vec!["devbox run -- bundle exec rubocop", &args])?
         .stdout()?;
     Ok(stdout)
@@ -41,7 +43,9 @@ pub fn rails_test(args: String) -> FnResult<String> {
         .with_exec(vec![
             "devbox run -- bundle config set --local deployment true",
         ])?
-        .with_exec(vec!["devbox run -- bundle install -j $(nproc)"])?
+        .with_exec(vec![
+            "devbox run -- bundle install -j $(nproc 2>/dev/null || sysctl -n hw.logicalcpu)",
+        ])?
         .with_exec(vec!["devbox run -- bundle exec rails db:migrate"])?
         .with_exec(vec!["devbox run -- bundle exec rails db:seed"])?
         .with_exec(vec!["devbox run -- bundle exec rails test", &args])?
@@ -60,12 +64,13 @@ pub fn rspec(args: String) -> FnResult<String> {
             "devbox run -- bundle config set --local deployment true",
         ])?
         .with_exec(vec!["devbox run -- gem install rspec"])?
-        .with_exec(vec!["devbox run -- bundle install -j $(nproc)"])?
+        .with_exec(vec![
+            "devbox run -- bundle install -j $(nproc 2>/dev/null || sysctl -n hw.logicalcpu)",
+        ])?
         .with_exec(vec!["devbox run -- rspec", &args])?
         .stdout()?;
     Ok(stdout)
 }
-
 
 #[plugin_fn]
 pub fn bundle_exec(args: String) -> FnResult<String> {
@@ -77,7 +82,9 @@ pub fn bundle_exec(args: String) -> FnResult<String> {
         .with_exec(vec![
             "devbox run -- bundle config set --local deployment true",
         ])?
-        .with_exec(vec!["devbox run -- bundle install -j $(nproc)"])?
+        .with_exec(vec![
+            "devbox run -- bundle install -j $(nproc 2>/dev/null || sysctl -n hw.logicalcpu)",
+        ])?
         .with_exec(vec!["devbox run -- bundle exec", &args])?
         .stdout()?;
     Ok(stdout)
